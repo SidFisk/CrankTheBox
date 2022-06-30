@@ -12,9 +12,8 @@ local gfx <const> = playdate.graphics
 local snd = playdate.sound
 local pd = playdate
 
---Animators
-local titleEnterAnimator = gfx.animator.new(2000, -200, 120, pd.easingFunctions.inOutElastic)
-local titleLeaveAnimator = gfx.animator.new(2000, 240, 400, pd.easingFunctions.inOutElastic)
+--Initial Animator
+local titleEnterAnimator = gfx.animator.new(2000, -100, 120, pd.easingFunctions.inOutElastic)
 
 --Sounds
 
@@ -25,46 +24,63 @@ local doubleSprite = nil     -- Double game badge
 local tripleSprite = nil     -- Triple game badge
 local titleCard = nil        -- Title Graphic for when the game first starts
 local instructionCard = nil  -- Instructions for the game -- seen after the title
+local flavorCard = nil -- Card to choose your game version
+local scoreSprite = nil -- Score card for the titleCard
 
 --Variables
+local playTimer = nil 
 local gamePhase = nil -- Tracks phase of game
 local showTitlePhase = 1 -- Show the title card
-local hideTitlePhase = 2 -- Show the title card
+local parkTitlePhase = 2 -- Show the title card
 local instructionsPhase = 3 -- Show the instructions card
 local flavorPhase = 4 -- Show the card to allow to select game flavor
-local rollPhase = 5 -- Phase to roll the dice
-local tilePhase = 6 -- Phase to select and crank away tiles
-local endPhase = 7 -- Endgame phase to show final score and high scores
+local tileFlyPhase = 5 -- Bring in the tiles!
+local rollPhase = 6 -- Phase to roll the dice
+local tilePhase = 7 -- Phase to select and crank away tiles
+local endPhase = 8 -- Endgame phase to show final score and high scores
 local badgeXcord = 132 -- X cordinate for the flavor badge
-local badgeYcord = 217 -- Y cordinate for the flavor badge
+local badgeYcord = 200 -- Y cordinate for the flavor badge
 
 local function showTitleCard()
 	titleCard:add()
 	local enterY = titleEnterAnimator:currentValue()
 	titleCard:moveTo(200, enterY)
-	if playdate.buttonJustPressed(playdate.kButtonA) then
-		gamePhase = hideTitlePhase
+	if titleEnterAnimator:ended() then
+		titleParkAnimator = gfx.animator.new(2000, 120, 200, pd.easingFunctions.inOutElastic,500)
+		gamePhase = parkTitlePhase
 	end
 end
 
-local function hideTitleCard()
-	local leaveX = titleLeaveAnimator:currentValue()
-	titleCard:moveTo(leaveX, 120)
-	if titleLeaveAnimator:ended() then
-		titleCard:remove()
+local function parkTitleCard()
+	local parkY = titleParkAnimator:currentValue()
+	titleCard:moveTo(200, parkY)
+	if titleParkAnimator:ended() then
+		instructionsEnterAnimator = gfx.animator.new(2000, -100, 82, pd.easingFunctions.inOutElastic)
 		gamePhase = instructionsPhase
 	end
 end
 
 
-local function showInstructioncard()
+local function showInstructionCard()
 	instructionCard:add()
-	if playdate.buttonJustPressed(playdate.kButtonA) then
+	local enterY = instructionsEnterAnimator:currentValue()
+	instructionCard:moveTo(200, enterY)
+	if pd.buttonJustPressed(pd.kButtonA) then
 		instructionCard:remove()
+		flavorEnterAnimator = gfx.animator.new(2000, -100, 82, pd.easingFunctions.inOutElastic)
 		gamePhase = flavorPhase
 	end
 end
 
+local function showFlavorCard()
+	flavorCard:add()
+	local enterY = flavorEnterAnimator:currentValue()
+	flavorCard:moveTo(200, enterY)
+	if pd.buttonJustPressed(pd.kButtonA) then
+		flavorCard:remove()
+		gamePhase = tileFlyPhase
+	end
+end
 local function initialize()
 --initialize gamescreen.  Adds all sprites, backgrounds, to default locations
 
@@ -80,12 +96,22 @@ local tripleImage = gfx.image.new("images/triple")
 	tripleSprite = gfx.sprite.new(tripleImage)
 	tripleSprite:moveTo(badgeXcord, badgeYcord)	
 
+local flavorImage = gfx.image.new("images/flavorCard")
+	flavorCard = gfx.sprite.new(flavorImage)
+
 local instructionImage = gfx.image.new("images/instructionCard")
 	instructionCard = gfx.sprite.new(instructionImage)
-	instructionCard:moveTo(200,120)	
-
+		
 local titleImage = gfx.image.new("images/titleCard")
 	titleCard = gfx.sprite.new(titleImage)
+
+local classicImage = gfx.image.new("images/classic")
+	classicSprite = gfx.sprite.new(classicImage)
+	classicSprite:moveTo(badgeXcord, badgeYcord)
+	
+local scoreImage = gfx.image.new("images/score")
+	scoreSprite = gfx.sprite.new(scoreImage)
+	scoreSprite:moveTo(290, 200)	
 
 local backgroundImage = gfx.image.new("images/background")
 	gfx.sprite.setBackgroundDrawingCallback(
@@ -101,19 +127,24 @@ end
 
 initialize()
 
-function playdate.update()
+function pd.update()
+
 
 if gamePhase == showTitlePhase then
 	showTitleCard()
 	gfx.sprite.update()
-elseif gamePhase == hideTitlePhase then
-	hideTitleCard()
+elseif gamePhase == parkTitlePhase then
+	parkTitleCard()
 	gfx.sprite.update()
 elseif gamePhase == instructionsPhase then
-	showInstructioncard()
+	showInstructionCard()
 	gfx.sprite.update()
 elseif gamePhase == flavorPhase then
-	tripleSprite:add()
+	showFlavorCard()
+	gfx.sprite.update()
+elseif gamePhase == tileFlyPhase then
+	classicSprite:add()
+	scoreSprite:add()
 	gfx.sprite.update()
 end
 
