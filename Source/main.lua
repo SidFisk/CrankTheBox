@@ -70,9 +70,9 @@ local flavorParkPhase = 6
 local tileFlyPhase = 7-- Bring in the tiles!
 local rollPhase = 8 -- Phase to roll the dice
 local tilePhase = 9 -- Phase to select and crank away tiles
-local endPhase = 19 -- Endgame phase to show final score and high scores
-local flavorXcord = 100 -- X coordinate for the flavor selector
-local flavorYcord = 100 -- Y coordinate for the flavor selector
+local endPhase = 10 -- Endgame phase to show final score and high scores
+local flavorXcord = nil -- X coordinate for the flavor selector
+local flavorYcord = nil -- Y coordinate for the flavor selector
 local badgeXcord = 132 -- X coordinate for the flavor badge
 local badgeYcord = 200 -- Y coordinate for the flavor badge
 local a1x = 25
@@ -168,8 +168,8 @@ local function showInstructionCard()
 end
 
 local function parkInstructionCard()
-	local enterY = instructionsParkAnimator:currentValue()
-	instructionCard:moveTo(200, enterY)
+	local parkY = instructionsParkAnimator:currentValue()
+	instructionCard:moveTo(200, parkY)
 	if instructionsParkAnimator:ended() then
 		instructionCard:remove()
 		flavorEnterAnimator = gfx.animator.new(1000, -100, 82, pd.easingFunctions.inOutElastic)
@@ -669,34 +669,24 @@ end
 initialize()
 
 function pd.update()
-
-
-if gamePhase == showTitlePhase then
-	showTitleCard()
+	if gamePhase == showTitlePhase then
+		showTitleCard()	
+	elseif gamePhase == parkTitlePhase then
+		parkTitleCard()
+	elseif gamePhase == instructionsPhase then
+		showInstructionCard()
+	elseif gamePhase == instructionsParkPhase then
+		parkInstructionCard()
+	elseif gamePhase == flavorPhase then
+		showFlavorCard()
+	elseif gamePhase == flavorParkPhase then
+		parkFlavorCard()
+	elseif gamePhase == tileFlyPhase then
+		tileFly()
+	elseif gamePhase == rollPhase then
+		diceRoll()
+	end
 	gfx.sprite.update()
-elseif gamePhase == parkTitlePhase then
-	parkTitleCard()
-	gfx.sprite.update()
-elseif gamePhase == instructionsPhase then
-	showInstructionCard()
-	gfx.sprite.update()
-elseif gamePhase == instructionsParkPhase then
-	parkInstructionCard()
-	gfx.sprite.update()
-elseif gamePhase == flavorPhase then
-	showFlavorCard()
-	gfx.sprite.update()
-elseif gamePhase == flavorParkPhase then
-	parkFlavorCard()
-	gfx.sprite.update()
-elseif gamePhase == tileFlyPhase then
-	tileFly()
-	gfx.sprite.update()
-elseif gamePhase == rollPhase then
-	diceRoll()
-	gfx.sprite.update()
-end
-
 end
 
 
