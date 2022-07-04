@@ -132,6 +132,10 @@ local c8y = 66
 local c9x = 377
 local c9y = 66
 
+local firstDieX = 170
+local firstDieY = 132
+local secondDieX = 230
+local secondDieY = 132
 
 local function showTitleCard()
 	titleCard:add()
@@ -216,7 +220,8 @@ end
 local function parkFlavorCard()
 	local enterY = flavorParkAnimator:currentValue()
 	flavorCard:moveTo(200, enterY)
-	selectorSprite:moveTo(flavorXcord, flavorYcord+enterY)	
+	-- selectorSprite:moveTo(flavorXcord, flavorYcord-enterY)
+	selectorSprite:remove()	
 	if flavorParkAnimator:ended() then
 		flavorCard:remove()
 		selectorSprite:remove()
@@ -478,6 +483,13 @@ local function tileFly()
 	end
 end
 
+local function diceRoll()
+	die2:moveTo(firstDieX, firstDieY)
+	die5:moveTo(secondDieX, secondDieY)
+	die2:add()
+	die5:add()
+end
+
 local function initialize()
 --initialize gamescreen.  Adds all sprites, backgrounds, to default locations
 
@@ -589,6 +601,26 @@ local c9Image = gfx.image.new("images/c9")
 	c9Tile = gfx.sprite.new(c9Image)
 	c9Tile:moveTo(500,500)
 
+local die1Image = gfx.image.new("images/die1")
+	die1 = gfx.sprite.new(die1Image)
+	
+local die2Image = gfx.image.new("images/die2")
+	die2 = gfx.sprite.new(die2Image)
+
+local die3Image = gfx.image.new("images/die3")
+	die3 = gfx.sprite.new(die3Image)
+	
+local die4Image = gfx.image.new("images/die4")
+	die4 = gfx.sprite.new(die4Image)
+
+local die5Image = gfx.image.new("images/die5")
+	die5 = gfx.sprite.new(die5Image)
+	
+local die6Image = gfx.image.new("images/die6")
+	die6 = gfx.sprite.new(die6Image)
+
+
+
 local classicImage = gfx.image.new("images/classic")
 	classicSprite = gfx.sprite.new(classicImage)
 	classicSprite:moveTo(badgeXcord, badgeYcord)	
@@ -659,27 +691,9 @@ elseif gamePhase == flavorParkPhase then
 	gfx.sprite.update()
 elseif gamePhase == tileFlyPhase then
 	tileFly()
-	--[[
-	a1Tile:add()
-	a1Tile:moveTo(a1x, a1y)
-	a2Tile:add()
-	a2Tile:moveTo(a2x, a2y)
-	a3Tile:add()
-	a3Tile:moveTo(a3x, a3y)
-	a4Tile:add()
-	a4Tile:moveTo(a4x, a4y)
-	a5Tile:add()
-	a5Tile:moveTo(a5x, a5y)
-	a6Tile:add()
-	a6Tile:moveTo(a6x, a6y)
-	a7Tile:add()
-	a7Tile:moveTo(a7x, a7y)
-	a8Tile:add()
-	a8Tile:moveTo(a8x, a8y)
-	a9Tile:add()
-	a9Tile:moveTo(a9x, a9y)
-	]]
-
+	gfx.sprite.update()
+elseif gamePhase == rollPhase then
+	diceRoll()
 	gfx.sprite.update()
 end
 
