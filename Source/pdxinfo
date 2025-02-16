@@ -1,6 +1,6 @@
-name=Retro Derby
+name=Crank the Box
 author=SidFisk Games
-description=Classic Hand-Held Game From Your Childhood
-bundleID=com.goolawn.RetroDerby
-version=1.5
+description=Foo
+bundleID=com.goolawn.CrankTheBox
+version=0.1
 imagePath=images/card.png
