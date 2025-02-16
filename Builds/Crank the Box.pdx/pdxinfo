@@ -1,0 +1,8 @@
+name=Crank the Box
+author=SidFisk Games
+description=Foo
+bundleID=com.goolawn.CrankTheBox
+version=0.2
+imagePath=images/card.png
+pdxversion=20601
+buildtime=793045448
