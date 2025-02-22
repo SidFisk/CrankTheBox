@@ -484,10 +484,15 @@ local function tileFly()
 end
 
 local function diceRoll()
-	die2:moveTo(firstDieX, firstDieY)
-	die5:moveTo(secondDieX, secondDieY)
-	die2:add()
-	die5:add()
+	--dieFirstValue = math.random(6)
+	--dieSecondValue = math.random(6)
+	firstDie = die5
+	secondDie = die5 	
+	firstDie:moveTo(firstDieX, firstDieY)
+	secondDie:moveTo(secondDieX, secondDieY)
+	firstDie:add()
+	secondDie:add()
+	
 end
 
 local function initialize()
@@ -618,6 +623,9 @@ local die5Image = gfx.image.new("images/die5")
 	
 local die6Image = gfx.image.new("images/die6")
 	die6 = gfx.sprite.new(die6Image)
+
+local firstDie
+local secondDie
 
 
 
