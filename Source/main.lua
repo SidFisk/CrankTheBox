@@ -19,6 +19,8 @@ local titleEnterAnimator = gfx.animator.new(1000, -100, 120, pd.easingFunctions.
 
 
 --Sprites
+local firstDie = nil
+local secondDie = nil 
 local classicSprite = nil    -- Classic game badge
 local doubleSprite = nil     -- Double game badge
 local tripleSprite = nil     -- Triple game badge
@@ -94,24 +96,24 @@ local a8y = 36
 local a9x = 377
 local a9y = 36
 
-local b1x = 25
-local b1y = 51
-local b2x = 69
-local b2y = 51
-local b3x = 113
-local b3y = 51
-local b4x = 157
-local b4y = 51
+local b9x = 25
+local b9y = 51
+local b8x = 69
+local b8y = 51
+local b7x = 113
+local b7y = 51
+local b6x = 157
+local b6y = 51
 local b5x = 201
 local b5y = 51
-local b6x = 245
-local b6y = 51
-local b7x = 289
-local b7y = 51
-local b8x = 333
-local b8y = 51
-local b9x = 377
-local b9y = 51
+local b4x = 245
+local b4y = 51
+local b3x = 289
+local b3y = 51
+local b2x = 333
+local b2y = 51
+local b1x = 377
+local b1y = 51
 
 local c1x = 25
 local c1y = 66
@@ -484,15 +486,52 @@ local function tileFly()
 end
 
 local function diceRoll()
-	--dieFirstValue = math.random(6)
-	--dieSecondValue = math.random(6)
-	firstDie = die5
-	secondDie = die5 	
+	
+	local die1Value = math.random(6)
+	local die2Value = math.random(6)
+	
+	gfx.drawText(math.ceil(die1Value), 250, 135)
+	
+	if die1Value == 1 then
+		firstDie = die1
+	elseif die1Value == 2 then
+		firstDie = die2
+	elseif die1Value == 3 then
+		firstDie = die3
+	elseif die1Value == 4 then
+		firstDie = die4
+	elseif die1Value == 5 then
+		firstDie = die5
+	elseif die1Value == 6 then
+		firstDie = die6
+	end
+	
+	if die2Value == 1 then
+		secondDie = die1
+	elseif die2Value == 2 then
+		secondDie = die2
+	elseif die2Value == 3 then
+		secondDie = die3
+	elseif die2Value == 4 then
+		secondDie = die4
+	elseif die2Value == 5 then
+		secondDie = die5
+	elseif die2Value == 6 then
+		secondDie = die6
+	end
+
 	firstDie:moveTo(firstDieX, firstDieY)
 	secondDie:moveTo(secondDieX, secondDieY)
 	firstDie:add()
 	secondDie:add()
+	gamePhase = waitPhase
 	
+end
+
+local function wait()
+	if pd.buttonJustPressed(pd.kButtonA) then
+		gamePhase = rollPhase
+	end
 end
 
 local function initialize()
@@ -693,6 +732,8 @@ function pd.update()
 		tileFly()
 	elseif gamePhase == rollPhase then
 		diceRoll()
+	elseif gamePhase == waitPhase then
+		wait()
 	end
 	gfx.sprite.update()
 end
