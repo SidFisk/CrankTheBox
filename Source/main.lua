@@ -9,8 +9,8 @@ import "CoreLibs/animator"
 
 --Shortcuts
 local gfx <const> = playdate.graphics
-local snd = playdate.sound
-local pd = playdate
+local snd <const> = playdate.sound
+local pd <const> = playdate
 
 --Initial Animator
 local titleEnterAnimator = gfx.animator.new(1000, -100, 120, pd.easingFunctions.inOutElastic)
@@ -19,8 +19,9 @@ local titleEnterAnimator = gfx.animator.new(1000, -100, 120, pd.easingFunctions.
 
 
 --Sprites
-local firstDie = nil
-local secondDie = nil 
+local firstDie = nil  -- Die #1
+local secondDie = nil -- Die #2
+local blank = nil -- blank tile for debugging
 local classicSprite = nil    -- Classic game badge
 local doubleSprite = nil     -- Double game badge
 local tripleSprite = nil     -- Triple game badge
@@ -138,6 +139,8 @@ local firstDieX = 170
 local firstDieY = 132
 local secondDieX = 230
 local secondDieY = 132
+die1Value = 0
+die2Value = 0
 
 local function showTitleCard()
 	titleCard:add()
@@ -487,10 +490,9 @@ end
 
 local function diceRoll()
 	
-	local die1Value = math.random(6)
-	local die2Value = math.random(6)
+	die1Value = math.random(6)
+	die2Value = math.random(6)
 	
-	gfx.drawText(math.ceil(die1Value), 250, 135)
 	
 	if die1Value == 1 then
 		firstDie = die1
@@ -507,23 +509,24 @@ local function diceRoll()
 	end
 	
 	if die2Value == 1 then
-		secondDie = die1
+		secondDie = dieTwo1
 	elseif die2Value == 2 then
-		secondDie = die2
+		secondDie = dieTwo2
 	elseif die2Value == 3 then
-		secondDie = die3
+		secondDie = dieTwo3
 	elseif die2Value == 4 then
-		secondDie = die4
+		secondDie = dieTwo4
 	elseif die2Value == 5 then
-		secondDie = die5
+		secondDie = dieTwo5
 	elseif die2Value == 6 then
-		secondDie = die6
+		secondDie = dieTwo6
 	end
 
 	firstDie:moveTo(firstDieX, firstDieY)
 	secondDie:moveTo(secondDieX, secondDieY)
 	firstDie:add()
 	secondDie:add()
+	
 	gamePhase = waitPhase
 	
 end
@@ -534,8 +537,36 @@ local function wait()
 	end
 end
 
+local function clearDice()
+	
+	if not(firstDie == nil) then firstDie:remove()
+	end
+	
+	if not(secondDie == nil) then secondDie:remove()
+	end
+	--secondDie:remove()
+end
+
+local function debug()
+	
+	local blankImage = gfx.image.new("images/blank")
+		blank = gfx.sprite.new(blankImage)
+		blank:moveTo(50,200)
+	
+	blank:add()
+	
+	gfx.drawText("FirstDieX=" .. math.ceil(firstDieX), 0, 120)
+	gfx.drawText("FirstDieY=" .. math.ceil(firstDieY), 0, 140)
+	gfx.drawText("SecDieX=" .. math.ceil(secondDieX), 0, 160)
+	gfx.drawText("SecDieY=" .. math.ceil(secondDieY), 0, 180)
+	gfx.drawText("Die1=" .. math.ceil(die1Value), 0, 200)
+	gfx.drawText("Die2=" .. math.ceil(die2Value), 0, 220)
+
+end
+
 local function initialize()
 --initialize gamescreen.  Adds all sprites, backgrounds, to default locations
+
 
 local a1Image = gfx.image.new("images/a1")
 	a1Tile = gfx.sprite.new(a1Image)
@@ -662,11 +693,24 @@ local die5Image = gfx.image.new("images/die5")
 	
 local die6Image = gfx.image.new("images/die6")
 	die6 = gfx.sprite.new(die6Image)
-
-local firstDie
-local secondDie
-
-
+	
+local die1Image = gfx.image.new("images/die1")
+	dieTwo1 = gfx.sprite.new(die1Image)
+		
+local die2Image = gfx.image.new("images/die2")
+	dieTwo2 = gfx.sprite.new(die2Image)
+	
+local die3Image = gfx.image.new("images/die3")
+	dieTwo3 = gfx.sprite.new(die3Image)
+		
+local die4Image = gfx.image.new("images/die4")
+	dieTwo4 = gfx.sprite.new(die4Image)
+	
+local die5Image = gfx.image.new("images/die5")
+	dieTwo5 = gfx.sprite.new(die5Image)
+		
+local die6Image = gfx.image.new("images/die6")
+	dieTwo6 = gfx.sprite.new(die6Image)
 
 local classicImage = gfx.image.new("images/classic")
 	classicSprite = gfx.sprite.new(classicImage)
@@ -701,13 +745,14 @@ local scoreImage = gfx.image.new("images/score")
 	scoreSprite:moveTo(290, 200)	
 	
 	local backgroundImage = gfx.image.new("images/background")
-	gfx.sprite.setBackgroundDrawingCallback(
+	 gfx.sprite.setBackgroundDrawingCallback(
 		function (x, y, width, height)
 			gfx.setClipRect(x,y,width,height)
 			backgroundImage:draw(0,0)
 			gfx.clearClipRect()
 		end
 	)
+	
 gamePhase = showTitlePhase
 gameFlavor = classic
 
@@ -731,11 +776,13 @@ function pd.update()
 	elseif gamePhase == tileFlyPhase then
 		tileFly()
 	elseif gamePhase == rollPhase then
+		clearDice()
 		diceRoll()
 	elseif gamePhase == waitPhase then
 		wait()
 	end
 	gfx.sprite.update()
+	--debug()
 end
 
 
