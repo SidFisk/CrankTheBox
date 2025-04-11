@@ -1,6 +1,6 @@
 {
-    "playdate-debug.sdkPath": "C:\\Users\\Kelly\\OneDrive\\Documents\\PlaydateSDK",
-    "playdate-debug.sourcePath": "C:\\Users\\Kelly\\Projects\\Playdate\\CrankTheBox\\Source",
-    "playdate-debug.outputPath": "C:\\Users\\Kelly\\Projects\\Playdate\\CrankTheBox\\Builds",
-    "playdate-debug.productName": "Hello World"
+    "playdate-debug.sdkPath": "\\Users\\Kelly\\OneDrive\\Documents\\PlaydateSDK",
+    "playdate-debug.sourcePath": "\\Users\\Kelly\\Projects\\Playdate\\CrankTheBox\\Source",
+    "playdate-debug.outputPath": "\\Users\\Kelly\\Projects\\Playdate\\CrankTheBox\\Builds",
+    "playdate-debug.productName": "CrankTheBox"
   }
