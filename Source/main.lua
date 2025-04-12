@@ -488,7 +488,39 @@ local function tileFly()
 	end
 end
 
-local function diceRoll()
+function dieAssign(dieValue)
+	
+	if dieValue == 1 then
+		return die1
+	elseif dieValue == 2 then
+		return die2
+	elseif dieValue == 3 then
+		return die3
+	elseif dieValue == 4 then
+		return die4
+	elseif dieValue == 5 then
+		return die5
+	elseif dieValue == 6 then
+		return die6
+	end
+end
+
+function diceRoll()
+	die1Value = math.random(6)
+	die2Value = math.random(6)
+	firstDie = gfx.getImage(dieAssign(die1Value))
+	secondDie = dieAssign(die2Value)
+	
+	firstDie:moveTo(firstDieX, firstDieY)
+	secondDie:moveTo(secondDieX, secondDieY)
+	firstDie:add()
+	secondDie:add()
+		
+	gamePhase = waitPhase
+		
+	end
+	
+--[[ local function diceRoll()
 	
 	die1Value = math.random(6)
 	die2Value = math.random(6)
@@ -530,6 +562,7 @@ local function diceRoll()
 	gamePhase = waitPhase
 	
 end
+]]
 
 local function wait()
 	if pd.buttonJustPressed(pd.kButtonA) then
@@ -539,10 +572,10 @@ end
 
 local function clearDice()
 	
-	if not(firstDie == nil) then firstDie:remove()
+	if die1Value > 0 then firstDie:remove()
 	end
 	
-	if not(secondDie == nil) then secondDie:remove()
+	if die2Value > 0 then secondDie:remove()
 	end
 	--secondDie:remove()
 end
@@ -782,7 +815,7 @@ function pd.update()
 		wait()
 	end
 	gfx.sprite.update()
-	--debug()
+	debug()
 end
 
 
